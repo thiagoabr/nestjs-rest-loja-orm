@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -20,25 +21,32 @@ export class UsuarioController {
 
   @Post()
   async criaUsuario(@Body() dadosDoUsuario: CriaUsuarioDTO) {
-    const usuarioEntity = new UsuarioEntity();
-    usuarioEntity.email = dadosDoUsuario.email;
-    usuarioEntity.senha = dadosDoUsuario.senha;
-    usuarioEntity.nome = dadosDoUsuario.nome;
-    usuarioEntity.id = uuid();
+    try {
+      const usuarioEntity = new UsuarioEntity();
+      usuarioEntity.email = dadosDoUsuario.email;
+      usuarioEntity.senha = dadosDoUsuario.senha;
+      usuarioEntity.nome = dadosDoUsuario.nome;
+      usuarioEntity.id = uuid();
 
-    this.usuarioService.criaUsuario(usuarioEntity);
+      this.usuarioService.criaUsuario(usuarioEntity);
 
-    return {
-      usuario: new ListaUsuarioDTO(usuarioEntity.id, usuarioEntity.nome),
-      messagem: 'usuário criado com sucesso',
-    };
+      return {
+        usuario: new ListaUsuarioDTO(usuarioEntity.id, usuarioEntity.nome),
+        messagem: 'usuário criado com sucesso',
+      };
+    } catch (error) {
+      throw new BadRequestException('Erro ao cadastrar usuário');
+    }
   }
 
   @Get()
   async listUsuarios() {
-    const usuariosSalvos = await this.usuarioService.listUsuarios();
-
-    return usuariosSalvos;
+    try {
+      const usuariosSalvos = await this.usuarioService.listUsuarios();
+      return usuariosSalvos;
+    } catch (error) {
+      throw new BadRequestException('Erro ao buscar usuários');
+    }
   }
 
   @Put('/:id')
@@ -46,24 +54,32 @@ export class UsuarioController {
     @Param('id') id: string,
     @Body() novosDados: AtualizaUsuarioDTO,
   ) {
-    const usuarioAtualizado = await this.usuarioService.atualizaUsuario(
-      id,
-      novosDados,
-    );
+    try {
+      const usuarioAtualizado = await this.usuarioService.atualizaUsuario(
+        id,
+        novosDados,
+      );
 
-    return {
-      usuario: usuarioAtualizado,
-      messagem: 'usuário atualizado com sucesso',
-    };
+      return {
+        usuario: usuarioAtualizado,
+        messagem: 'usuário atualizado com sucesso',
+      };
+    } catch (error) {
+      throw new BadRequestException('Erro ao atualizar usuário');
+    }
   }
 
   @Delete('/:id')
   async removeUsuario(@Param('id') id: string) {
-    const usuarioRemovido = await this.usuarioService.deletaUsuario(id);
+    try {
+      const usuarioRemovido = await this.usuarioService.deletaUsuario(id);
 
-    return {
-      usuario: usuarioRemovido,
-      messagem: 'usuário removido com suceso',
-    };
+      return {
+        usuario: usuarioRemovido,
+        messagem: 'usuário removido com suceso',
+      };
+    } catch (error) {
+      throw new BadRequestException('Erro ao excluir usuário');
+    }
   }
 }

@@ -60,20 +60,19 @@ $ npm run test:cov
 
 ## Database
 
-1) Crie o arquivo .env com os seguintes dados:
-DB_HOST=localhost
-DB_PORT=5432
-DB_USERNAME=admin
-DB_PASSWORD=secret
-DB_NAME=nestjsdb
-DB_ADMIN_EMAIL=admin@email.com
+1. Crie o arquivo .env com os seguintes dados:
+   DB_HOST=localhost
+   DB_PORT=5432
+   DB_USERNAME=admin
+   DB_PASSWORD=secret
+   DB_NAME=nestjsdb
+   DB_ADMIN_EMAIL=admin@email.com
 
-2) Construir o container: docker-compose up -d
+2. Construir o container: docker-compose up -d
 
 Adicionais:
 Descontruir o container: docker-compose down -d
 Listar os containeres em execução: docker ps
-
 
 ## Support
 

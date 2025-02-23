@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -7,12 +8,10 @@ import {
   Post,
   Put,
 } from '@nestjs/common';
-import { randomUUID } from 'crypto';
-
 import { AtualizaProdutoDTO } from './dto/atualizaProduto.dto';
 import { CriaProdutoDTO } from './dto/CriaProduto.dto';
-import { ProdutoEntity } from './produto.entity';
 import { ProdutoService } from './produto.service';
+import { ProdutoEntity } from './produto.entity';
 
 @Controller('produtos')
 export class ProdutoController {
@@ -20,25 +19,21 @@ export class ProdutoController {
 
   @Post()
   async criaNovo(@Body() dadosProduto: CriaProdutoDTO) {
-    const produto = new ProdutoEntity();
-
-    produto.id = randomUUID();
-    produto.nome = dadosProduto.nome;
-    produto.usuarioId = dadosProduto.usuarioId;
-    produto.valor = dadosProduto.valor;
-    produto.quantidade = dadosProduto.quantidade;
-    produto.descricao = dadosProduto.descricao;
-    produto.categoria = dadosProduto.categoria;
-    produto.caracteristicas = dadosProduto.caracteristicas;
-    produto.imagens = dadosProduto.imagens;
-
-    const produtoCadastrado = this.produtoService.criaProduto(produto);
-    return produtoCadastrado;
+    try {
+      const produtoCadastrado = this.produtoService.criaProduto(dadosProduto);
+      return produtoCadastrado;
+    } catch (error) {
+      throw new BadRequestException('Erro ao cadastrar produto');
+    }
   }
 
   @Get()
   async listaTodos() {
-    return this.produtoService.listProdutos();
+    try {
+      return this.produtoService.listProdutos();
+    } catch (error) {
+      throw new BadRequestException('Erro ao buscar produto');
+    }
   }
 
   @Put('/:id')
@@ -46,24 +41,37 @@ export class ProdutoController {
     @Param('id') id: string,
     @Body() dadosProduto: AtualizaProdutoDTO,
   ) {
-    const produtoAlterado = await this.produtoService.atualizaProduto(
-      id,
-      dadosProduto,
-    );
-
-    return {
-      mensagem: 'produto atualizado com sucesso',
-      produto: produtoAlterado,
-    };
+    try {
+      const produtoAlterado = await this.produtoService.atualizaProduto(
+        id,
+        dadosProduto,
+      );
+      return {
+        mensagem: 'Produto atualizado com sucesso',
+        produto: produtoAlterado,
+      };
+    } catch (error) {
+      throw new BadRequestException('Erro ao atualizar produto');
+    }
   }
 
   @Delete('/:id')
   async remove(@Param('id') id: string) {
-    const produtoRemovido = await this.produtoService.deletaProduto(id);
+    try {
+      const produtoRemovido = await this.produtoService.deletaProduto(id);
+      return {
+        mensagem: 'Produto removido com sucesso',
+        produto: produtoRemovido,
+      };
+    } catch (error) {
+      throw new BadRequestException('Erro ao excluir produto');
+    }
+  }
 
-    return {
-      mensagem: 'produto removido com sucesso',
-      produto: produtoRemovido,
-    };
+  @Get('categoria/:categoria')
+  async buscarPorCategoria(
+    @Param('categoria') categoria: string,
+  ): Promise<ProdutoEntity[]> {
+    return this.produtoService.buscaPorCategoria(categoria);
   }
 }

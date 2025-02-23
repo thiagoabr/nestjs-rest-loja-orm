@@ -75,6 +75,10 @@ export class CriaProdutoDTO {
   @Type(() => ImagemProdutoDTO)
   imagens: ImagemProdutoDTO[];
 
+  @IsNotEmpty()
+  @IsUUID()
+  fornecedorId: string;
+
   @IsString()
   @IsNotEmpty({ message: 'Categoria do produto não pode ser vazia' })
   categoria: string;
