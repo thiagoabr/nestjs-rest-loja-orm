@@ -55,6 +55,26 @@ export class ProdutoService {
     return produtosLista;
   }
 
+  async getProdutosPaginados(pagina: number, limite: number) {
+    const indexInicial = (pagina - 1) * limite;
+    const indexFinal = indexInicial + limite;
+    const produtos = this.produtoRepository.find({
+      relations: {
+        imagens: true,
+        caracteristicas: true,
+        fornecedor: true,
+      },
+    });
+    const produtosPaginados = (await produtos).slice(indexInicial, indexFinal);
+
+    return {
+      total: (await produtos).length,
+      pagina,
+      limite,
+      produtos: produtosPaginados,
+    };
+  }
+
   async atualizaProduto(id: string, novosDados: AtualizaProdutoDTO) {
     const entityName = await this.produtoRepository.findOneBy({ id });
     Object.assign(entityName, novosDados);

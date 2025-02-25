@@ -7,6 +7,7 @@ import {
   Param,
   Post,
   Put,
+  Query,
 } from '@nestjs/common';
 import { AtualizaProdutoDTO } from './dto/atualizaProduto.dto';
 import { CriaProdutoDTO } from './dto/CriaProduto.dto';
@@ -28,11 +29,22 @@ export class ProdutoController {
   }
 
   @Get()
-  async listaTodos() {
+  async listaTodos(
+    @Query('pagina') pagina: string,
+    @Query('limite') limite: string,
+  ) {
     try {
+      if (pagina && limite) {
+        const numeroPagina = parseInt(pagina, 10);
+        const numeroLimite = parseInt(limite, 10);
+        return this.produtoService.getProdutosPaginados(
+          numeroPagina,
+          numeroLimite,
+        );
+      }
       return this.produtoService.listProdutos();
     } catch (error) {
-      throw new BadRequestException('Erro ao buscar produto');
+      throw new BadRequestException('Erro ao listar produtos');
     }
   }
 
