@@ -47,21 +47,21 @@ export class ProdutoEntity {
   @OneToMany(
     () => ProdutoImagemEntity,
     (produtoImageEntity) => produtoImageEntity.produto,
-    { cascade: true, eager: true },
+    { cascade: true, eager: false },
   )
   imagens: ProdutoImagemEntity[];
 
   @OneToMany(
     () => ProdutoCaracteristicaEntity,
     (produtoCaracteristicaEntity) => produtoCaracteristicaEntity.produto,
-    { cascade: true, eager: true },
+    { cascade: true, eager: false },
   )
   caracteristicas: ProdutoCaracteristicaEntity[];
 
   @ManyToOne(
     () => FornecedorEntity,
     (fornecedorEntity) => fornecedorEntity.produtos,
-    { cascade: true, eager: true },
+    { cascade: true, eager: false },
   )
   fornecedor: FornecedorEntity;
 }
