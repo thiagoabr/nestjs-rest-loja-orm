@@ -6,6 +6,7 @@ import {
   DeleteDateColumn,
   PrimaryGeneratedColumn,
   ManyToOne,
+  OneToMany,
 } from 'typeorm';
 import { StatusPedido } from './enum/statuspedido.enum';
 import { UsuarioEntity } from '../usuario/usuario.entity';
@@ -34,9 +35,8 @@ export class PedidoEntity {
   @ManyToOne(() => UsuarioEntity, (usuario) => usuario.pedidos)
   usuario: UsuarioEntity;
 
-  @ManyToOne(() => ItemPedidoEntity, (itensPedido) => itensPedido.pedido, {
-    onDelete: 'CASCADE',
-    onUpdate: 'CASCADE',
+  @OneToMany(() => ItemPedidoEntity, (itemPedido) => itemPedido.pedido, {
+    cascade: true,
   })
-  itensPedido: ItemPedidoEntity;
+  itensPedido: ItemPedidoEntity[];
 }

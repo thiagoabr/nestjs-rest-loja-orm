@@ -1,8 +1,13 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ListaUsuarioDTO } from './dto/ListaUsuario.dto';
 import { UsuarioEntity } from './usuario.entity';
-import { Repository } from 'typeorm';
+import { QueryFailedError, Repository } from 'typeorm';
 import { AtualizaUsuarioDTO } from './dto/AtualizaUsuario.dto';
 import { CriaUsuarioDTO } from './dto/CriaUsuario.dto';
 
@@ -14,11 +19,28 @@ export class UsuarioService {
   ) {}
 
   async criaUsuario(dadosDoUsuario: CriaUsuarioDTO) {
-    const usuarioEntity = new UsuarioEntity();
+    try {
+      const usuarioEntity = new UsuarioEntity();
 
-    Object.assign(usuarioEntity, dadosDoUsuario as UsuarioEntity);
+      Object.assign(usuarioEntity, dadosDoUsuario as UsuarioEntity);
 
-    return this.usuarioRepository.save(usuarioEntity);
+      const usuarioExistente = await this.usuarioRepository.findOne({
+        where: { email: dadosDoUsuario.email },
+      });
+
+      if (usuarioExistente) {
+        throw new ConflictException('E-mail já cadastrado!');
+      }
+
+      return this.usuarioRepository.save(usuarioEntity);
+    } catch (error) {
+      if (error instanceof QueryFailedError) {
+        throw new InternalServerErrorException(
+          'Erro no banco de dados. Tente novamente mais tarde.',
+        );
+      }
+      throw error;
+    }
   }
 
   async listUsuarios() {

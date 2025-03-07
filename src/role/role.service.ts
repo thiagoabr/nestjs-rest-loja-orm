@@ -1,26 +1,42 @@
-import { Injectable } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  InternalServerErrorException,
+} from '@nestjs/common';
 import { CriaRoleDto } from './dto/CriaRole.dto';
-import { AtualizaRoleDto } from './dto/AtualizaRole.dto';
+import { RoleEntity } from './role.entity';
+import { QueryFailedError, Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class RoleService {
-  create(criaRoleDto: CriaRoleDto) {
-    return 'This action adds a new role';
-  }
+  constructor(
+    @InjectRepository(RoleEntity)
+    private readonly roleRepository: Repository<RoleEntity>,
+  ) {}
 
-  findAll() {
-    return `This action returns all role`;
-  }
+  async criaRole(dadosRole: CriaRoleDto) {
+    try {
+      const roleEntity = new RoleEntity();
 
-  findOne(id: number) {
-    return `This action returns a #${id} role`;
-  }
+      Object.assign(roleEntity, dadosRole as RoleEntity);
 
-  update(id: number, atualizaRoleDto: AtualizaRoleDto) {
-    return `This action updates a #${id} role`;
-  }
+      const roleExistente = await this.roleRepository.findOne({
+        where: { id: dadosRole.nome },
+      });
 
-  remove(id: number) {
-    return `This action removes a #${id} role`;
+      if (roleExistente) {
+        throw new ConflictException('Role já cadastrada!');
+      }
+
+      return this.roleRepository.save(roleEntity);
+    } catch (error) {
+      if (error instanceof QueryFailedError) {
+        throw new InternalServerErrorException(
+          'Erro no banco de dados. Tente novamente mais tarde.',
+        );
+      }
+      throw error;
+    }
   }
 }
