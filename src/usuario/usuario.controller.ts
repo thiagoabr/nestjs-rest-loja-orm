@@ -8,11 +8,9 @@ import {
   Post,
   Put,
 } from '@nestjs/common';
-import { v4 as uuid } from 'uuid';
 import { AtualizaUsuarioDTO } from './dto/AtualizaUsuario.dto';
 import { CriaUsuarioDTO } from './dto/CriaUsuario.dto';
 import { ListaUsuarioDTO } from './dto/ListaUsuario.dto';
-import { UsuarioEntity } from './usuario.entity';
 import { UsuarioService } from './usuario.service';
 
 @Controller('/usuarios')
@@ -21,22 +19,12 @@ export class UsuarioController {
 
   @Post()
   async criaUsuario(@Body() dadosDoUsuario: CriaUsuarioDTO) {
-    try {
-      const usuarioEntity = new UsuarioEntity();
-      usuarioEntity.email = dadosDoUsuario.email;
-      usuarioEntity.senha = dadosDoUsuario.senha;
-      usuarioEntity.nome = dadosDoUsuario.nome;
-      usuarioEntity.id = uuid();
+    const usuarioCriado = await this.usuarioService.criaUsuario(dadosDoUsuario);
 
-      this.usuarioService.criaUsuario(usuarioEntity);
-
-      return {
-        usuario: new ListaUsuarioDTO(usuarioEntity.id, usuarioEntity.nome),
-        messagem: 'usuário criado com sucesso',
-      };
-    } catch (error) {
-      throw new BadRequestException('Erro ao cadastrar usuário');
-    }
+    return {
+      usuario: new ListaUsuarioDTO(usuarioCriado.id, usuarioCriado.nome),
+      messagem: 'usuário criado com sucesso',
+    };
   }
 
   @Get()

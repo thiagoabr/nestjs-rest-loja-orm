@@ -11,6 +11,7 @@ import {
 import { ProdutoImagemEntity } from './produto-imagem.entity';
 import { ProdutoCaracteristicaEntity } from './produto-caracteristica.entity';
 import { FornecedorEntity } from 'src/fornecedor/fornecedor.entity';
+import { ItemPedidoEntity } from 'src/pedido/itempedido.entity';
 
 @Entity({ name: 'produtos' })
 export class ProdutoEntity {
@@ -58,10 +59,13 @@ export class ProdutoEntity {
   )
   caracteristicas: ProdutoCaracteristicaEntity[];
 
-  @ManyToOne(
-    () => FornecedorEntity,
-    (fornecedorEntity) => fornecedorEntity.produtos,
-    { cascade: true, eager: false },
-  )
+  @ManyToOne(() => FornecedorEntity, (fornecedor) => fornecedor.produtos, {
+    nullable: true,
+    cascade: false,
+    eager: true,
+  })
   fornecedor: FornecedorEntity;
+
+  @OneToMany(() => ItemPedidoEntity, (itemPedido) => itemPedido.produto)
+  itensPedido: ItemPedidoEntity[];
 }

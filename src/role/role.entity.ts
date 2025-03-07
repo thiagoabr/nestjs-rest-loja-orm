@@ -1,3 +1,4 @@
+import { UsuarioEntity } from '../usuario/usuario.entity';
 import {
   Entity,
   Column,
@@ -7,21 +8,17 @@ import {
   PrimaryGeneratedColumn,
   OneToMany,
 } from 'typeorm';
-import { PedidoEntity } from '../pedido/pedido.entity';
 
-@Entity({ name: 'usuarios' })
-export class UsuarioEntity {
+@Entity({ name: 'roles' })
+export class RoleEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
   @Column({ name: 'nome', length: 100, nullable: false })
   nome: string;
 
-  @Column({ name: 'email', length: 70, nullable: false })
-  email: string;
-
-  @Column({ name: 'senha', length: 255, nullable: false })
-  senha: string;
+  @Column({ name: 'descricao', length: 100, nullable: false })
+  descricao: string;
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: string;
@@ -32,6 +29,6 @@ export class UsuarioEntity {
   @DeleteDateColumn({ name: 'deleted_at' })
   deletedAt: string;
 
-  @OneToMany(() => PedidoEntity, (pedido) => pedido.usuario)
-  pedidos: PedidoEntity[];
+  @OneToMany(() => UsuarioEntity, (usuario) => usuario.id)
+  usuario: UsuarioEntity[];
 }
