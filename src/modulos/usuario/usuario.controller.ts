@@ -7,12 +7,14 @@ import {
   Param,
   Post,
   Put,
+  UseInterceptors,
 } from '@nestjs/common';
 import { AtualizaUsuarioDTO } from './dto/AtualizaUsuario.dto';
 import { CriaUsuarioDTO } from './dto/CriaUsuario.dto';
 import { ListaUsuarioDTO } from './dto/ListaUsuario.dto';
 import { UsuarioService } from './usuario.service';
 import { HashearSenhaPipe } from 'src/recursos/pipes/hashear-senha.pipe';
+import { CacheInterceptor } from '@nestjs/cache-manager';
 
 @Controller('/usuarios')
 export class UsuarioController {
@@ -23,18 +25,23 @@ export class UsuarioController {
     @Body() { senha, ...dadosDoUsuario }: CriaUsuarioDTO,
     @Body('senha', HashearSenhaPipe) senhaHasheada: string,
   ) {
-    const usuarioCriado = await this.usuarioService.criaUsuario({
-      ...dadosDoUsuario,
-      senha: senhaHasheada,
-    });
+    try {
+      const usuarioCriado = await this.usuarioService.criaUsuario({
+        ...dadosDoUsuario,
+        senha: senhaHasheada,
+      });
 
-    return {
-      usuario: new ListaUsuarioDTO(usuarioCriado.id, usuarioCriado.nome),
-      messagem: 'usuário criado com sucesso',
-    };
+      return {
+        usuario: new ListaUsuarioDTO(usuarioCriado.id, usuarioCriado.nome),
+        messagem: 'usuário criado com sucesso',
+      };
+    } catch (error) {
+      throw new BadRequestException('Erro ao criar usuário');
+    }
   }
 
   @Get()
+  @UseInterceptors(CacheInterceptor)
   async listUsuarios() {
     try {
       const usuariosSalvos = await this.usuarioService.listUsuarios();

@@ -2,43 +2,77 @@ import {
   Controller,
   Get,
   Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
   BadRequestException,
-  Query,
+  UseGuards,
+  Body,
+  Param,
+  Patch,
+  Req,
 } from '@nestjs/common';
 import { PedidoService } from './pedido.service';
+import {
+  AutenticacaoGuard,
+  RequisicaoComUsuario,
+} from '../autenticacao/autenticacao.guard';
+import { CriaPedidoDTO } from './dto/CriaPedido.dto';
+import { AtualizaPedidoDto } from './dto/AtualizaPedido.dto';
 
+@UseGuards(AutenticacaoGuard)
 @Controller('pedidos')
 export class PedidoController {
   constructor(private readonly pedidoService: PedidoService) {}
 
   @Post()
-  criaPedido(@Query('usuarioId') usuarioId: string) {
+  async criaPedido(
+    @Req() req: RequisicaoComUsuario,
+    @Body() dadosDoPedido: CriaPedidoDTO,
+  ) {
     try {
-      return this.pedidoService.cadastraPedido(usuarioId);
+      const usuarioId = req.usuario.sub;
+      const pedidoCriado = await this.pedidoService.cadastraPedido(
+        usuarioId,
+        dadosDoPedido,
+      );
+
+      return {
+        mensagem: 'Pedido feito com sucesso.',
+        pedido: pedidoCriado,
+      };
     } catch (error) {
       throw new BadRequestException('Erro ao cadastrar pedido');
     }
   }
 
   @Get()
-  listarProdutos() {
+  async obtemPedidosDeUsuario(@Req() req: RequisicaoComUsuario) {
     try {
-      return this.pedidoService.listarPedidos();
+      const usuarioId = req.usuario.sub;
+      const pedidos = await this.pedidoService.obtemPedidosDeUsuario(usuarioId);
+      return {
+        mensagem: 'Pedidos obtidos com sucesso.',
+        pedidos,
+      };
     } catch (error) {
       throw new BadRequestException('Erro ao listar pedidos');
     }
   }
 
-  @Get()
-  listarPedidosByUsuario(@Query('usuarioId') usuarioId: string) {
+  @Patch(':id')
+  async atualizaPedido(
+    @Req() req: RequisicaoComUsuario,
+    @Param('id') pedidoId: string,
+    @Body() dadosDeAtualizacao: AtualizaPedidoDto,
+  ) {
     try {
-      return this.pedidoService.listarPedidosByUsuario(usuarioId);
+      const usuarioId = req.usuario.sub;
+      const pedidoAtualizado = await this.pedidoService.atualizaPedido(
+        pedidoId,
+        dadosDeAtualizacao,
+        usuarioId,
+      );
+      return pedidoAtualizado;
     } catch (error) {
-      throw new BadRequestException('Erro ao listar pedidos');
+      throw new BadRequestException('Erro ao atualizar pedido');
     }
   }
 }

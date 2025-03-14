@@ -14,7 +14,7 @@ import { AtualizaProdutoDTO } from './dto/atualizaProduto.dto';
 import { CriaProdutoDTO } from './dto/CriaProduto.dto';
 import { ProdutoService } from './produto.service';
 import { ProdutoEntity } from './produto.entity';
-import { CacheInterceptor } from '@nestjs/cache-manager';
+import { CacheInterceptor, CacheTTL } from '@nestjs/cache-manager';
 
 @Controller('produtos')
 export class ProdutoController {
@@ -31,6 +31,8 @@ export class ProdutoController {
   }
 
   @Get()
+  @UseInterceptors(CacheInterceptor)
+  @CacheTTL(60 * 1000)
   async listaTodos(
     @Query('pagina') pagina: string,
     @Query('limite') limite: string,

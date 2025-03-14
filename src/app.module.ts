@@ -1,4 +1,8 @@
-import { Module } from '@nestjs/common';
+import {
+  ClassSerializerInterceptor,
+  ConsoleLogger,
+  Module,
+} from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ProdutoModule } from './modulos/produto/produto.module';
@@ -7,10 +11,11 @@ import { FornecedorModule } from './modulos/fornecedor/fornecedor.module';
 import { PostgresConfigService } from './config/postgres.config.service';
 import { PedidoModule } from './modulos/pedido/pedido.module';
 import { RoleModule } from './modulos/role/role.module';
-import { APP_FILTER } from '@nestjs/core';
+import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
 import { FiltroDeExcecaoGlobal } from 'src/recursos/filtros/filtro-de-excecao-global';
 import { CacheModule } from '@nestjs/cache-manager';
 import { redisStore } from 'cache-manager-redis-yet';
+import { AutenticacaoModule } from './modulos/autenticacao/autenticacao.module';
 
 @Module({
   imports: [
@@ -19,6 +24,7 @@ import { redisStore } from 'cache-manager-redis-yet';
     FornecedorModule,
     PedidoModule,
     RoleModule,
+    AutenticacaoModule,
     ConfigModule.forRoot({
       isGlobal: true,
     }),
@@ -28,7 +34,7 @@ import { redisStore } from 'cache-manager-redis-yet';
     }),
     CacheModule.registerAsync({
       useFactory: async () => ({
-        store: await redisStore({ ttl: 3600 * 1000 }),
+        store: await redisStore({ ttl: 10 * 1000 }),
       }),
       isGlobal: true,
     }),
@@ -38,6 +44,11 @@ import { redisStore } from 'cache-manager-redis-yet';
       provide: APP_FILTER,
       useClass: FiltroDeExcecaoGlobal,
     },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: ClassSerializerInterceptor,
+    },
+    ConsoleLogger,
   ],
 })
 export class AppModule {}
