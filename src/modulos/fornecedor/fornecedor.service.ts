@@ -7,7 +7,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { FornecedorEntity } from './fornecedor.entity';
 import { AtualizaFornecedorDTO } from './dto/AtualizaFornecedor.dto';
-import { ProdutoEntity } from 'src/produto/produto.entity';
+import { ProdutoEntity } from 'src/modulos/produto/produto.entity';
 
 @Injectable()
 export class FornecedorService {

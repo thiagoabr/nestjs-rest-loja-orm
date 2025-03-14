@@ -3,8 +3,8 @@ import { PedidoService } from './pedido.service';
 import { PedidoController } from './pedido.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { PedidoEntity } from './pedido.entity';
-import { UsuarioEntity } from 'src/usuario/usuario.entity';
-import { ProdutoEntity } from 'src/produto/produto.entity';
+import { UsuarioEntity } from 'src/modulos/usuario/usuario.entity';
+import { ProdutoEntity } from 'src/modulos/produto/produto.entity';
 
 @Module({
   imports: [

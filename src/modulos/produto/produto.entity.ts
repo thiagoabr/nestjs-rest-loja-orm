@@ -11,7 +11,7 @@ import {
 import { ProdutoImagemEntity } from './produto-imagem.entity';
 import { ProdutoCaracteristicaEntity } from './produto-caracteristica.entity';
 import { ItemPedidoEntity } from '../pedido/itempedido.entity';
-import { FornecedorEntity } from 'src/fornecedor/fornecedor.entity';
+import { FornecedorEntity } from 'src/modulos/fornecedor/fornecedor.entity';
 
 @Entity({ name: 'produtos' })
 export class ProdutoEntity {
@@ -25,7 +25,7 @@ export class ProdutoEntity {
   valor: number;
 
   @Column({ name: 'quantidade_disponivel', nullable: false })
-  quantidadeDisponivel: number;
+  quantidade: number;
 
   @Column({ name: 'descricao', length: 255, nullable: false })
   descricao: string;

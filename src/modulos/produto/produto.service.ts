@@ -5,7 +5,7 @@ import { ProdutoEntity } from './produto.entity';
 import { Repository } from 'typeorm';
 import { AtualizaProdutoDTO } from './dto/AtualizaProduto.dto';
 import { CriaProdutoDTO } from './dto/CriaProduto.dto';
-import { FornecedorEntity } from 'src/fornecedor/fornecedor.entity';
+import { FornecedorEntity } from 'src/modulos/fornecedor/fornecedor.entity';
 import { ProdutoRepository } from './produto.repository';
 
 @Injectable()
@@ -53,6 +53,10 @@ export class ProdutoService {
         ),
     );
     return produtosLista;
+  }
+
+  async listaProdutosPorId(id: string) {
+    return await this.produtoRepository.findOneBy({ id });
   }
 
   async getProdutosPaginados(pagina: number, limite: number) {

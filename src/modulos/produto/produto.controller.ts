@@ -8,11 +8,13 @@ import {
   Post,
   Put,
   Query,
+  UseInterceptors,
 } from '@nestjs/common';
 import { AtualizaProdutoDTO } from './dto/atualizaProduto.dto';
 import { CriaProdutoDTO } from './dto/CriaProduto.dto';
 import { ProdutoService } from './produto.service';
 import { ProdutoEntity } from './produto.entity';
+import { CacheInterceptor } from '@nestjs/cache-manager';
 
 @Controller('produtos')
 export class ProdutoController {
@@ -45,6 +47,17 @@ export class ProdutoController {
       return this.produtoService.listProdutos();
     } catch (error) {
       throw new BadRequestException('Erro ao listar produtos');
+    }
+  }
+
+  @Get('/:id')
+  @UseInterceptors(CacheInterceptor)
+  async listaProdutoPorId(@Param('id') id: string) {
+    try {
+      console.log('Buscando pelo BD');
+      return await this.produtoService.listaProdutosPorId(id);
+    } catch (error) {
+      throw new BadRequestException(`Erro ao buscar produto ${id}`);
     }
   }
 

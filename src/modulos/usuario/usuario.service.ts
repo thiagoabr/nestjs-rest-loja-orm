@@ -57,7 +57,7 @@ export class UsuarioService {
     });
 
     if (checkEmail === null)
-      throw new NotFoundException('O email não foi encontrado.');
+      throw new NotFoundException('O email não foi encontrados.');
 
     return checkEmail;
   }
