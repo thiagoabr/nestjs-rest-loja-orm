@@ -1,6 +1,7 @@
 import {
   BadRequestException,
   Body,
+  CacheTTL,
   Controller,
   Delete,
   Get,
@@ -32,8 +33,8 @@ export class UsuarioController {
       });
 
       return {
-        usuario: new ListaUsuarioDTO(usuarioCriado.id, usuarioCriado.nome),
         messagem: 'usuário criado com sucesso',
+        usuario: new ListaUsuarioDTO(usuarioCriado.id, usuarioCriado.nome),
       };
     } catch (error) {
       throw new BadRequestException('Erro ao criar usuário');
@@ -42,6 +43,7 @@ export class UsuarioController {
 
   @Get()
   @UseInterceptors(CacheInterceptor)
+  @CacheTTL(15 * 1000)
   async listUsuarios() {
     try {
       const usuariosSalvos = await this.usuarioService.listUsuarios();
