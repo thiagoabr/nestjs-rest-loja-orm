@@ -19,7 +19,11 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "typeorm": "typeorm-ts-node-esm -d dist/db/data-source-cli.js"
+    "typeorm": "typeorm-ts-node-esm -d dist/db/data-source-cli.js",
+    "typeorm:show": "typeorm-ts-node-esm -d dist/db/data-source-cli.js migration:show",
+    "typeorm:run": "typeorm-ts-node-esm -d dist/db/data-source-cli.js migration:run",
+    "typeorm:generate": "typeorm-ts-node-esm -d dist/db/data-source-cli.js migration:generate",
+    "typeorm:create": "typeorm-ts-node-esm -d dist/db/data-source-cli.js migration:create -n"
   },
   "dependencies": {
     "@nestjs/cache-manager": "2.0.1",
@@ -41,7 +45,7 @@
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
     "rxjs": "^7.2.0",
-    "typeorm": "^0.3.21"
+    "typeorm": "^0.3.12"
   },
   "devDependencies": {
     "@nestjs/cli": "^9.0.0",
@@ -65,7 +69,8 @@
     "ts-loader": "^9.2.3",
     "ts-node": "^10.0.0",
     "tsconfig-paths": "4.1.0",
-    "typescript": "^4.7.4"
+    "typescript": "^4.7.4",
+    "@jest/globals": "28.1.2"
   },
   "jest": {
     "moduleFileExtensions": [
