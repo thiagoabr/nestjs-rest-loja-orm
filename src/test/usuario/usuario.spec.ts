@@ -1,46 +1,55 @@
+import * as request from 'supertest';
+import { describe, expect, it, beforeAll, afterAll } from '@jest/globals';
+import { INestApplication } from '@nestjs/common';
+import { bootstrap } from '../../main';
 import { UsuarioEntity } from '../../modulos/usuario/usuario.entity';
-import { describe, expect, it } from '@jest/globals';
 
-describe('Testando o modelo de Usuário', () => {
-  let usuario: UsuarioEntity;
+let app: INestApplication;
 
-  beforeEach(() => {
-    usuario = new UsuarioEntity();
-    usuario.id = 'uuid-usuario';
-    usuario.nome = 'Usuario Teste';
-    usuario.email = 'teste@teste.com';
-    usuario.senha = 'Abc@123';
-    usuario.createdAt = new Date().toISOString();
-    usuario.updatedAt = new Date().toISOString();
-    usuario.pedidos = [];
+beforeAll(async () => {
+  app = await bootstrap();
+  await app.init();
+});
+
+afterAll(async () => {
+  await app.close();
+});
+
+describe('GET em /usuarios', () => {
+  it('Deve retornar a lista de recursos', async () => {
+    await request(app.getHttpServer()).get('/usuarios').expect(200);
   });
+});
 
-  it('Deve ser definido', () => {
-    expect(usuario).toBeDefined();
+describe('POST em /usuarios', () => {
+  it('Deve criar um novo usuários', async () => {
+    const retorno = await request(app.getHttpServer())
+      .post('/usuarios')
+      .send({
+        nome: 'Alura',
+        email: 'alura@alura.com.br',
+        senha: 'alura123456',
+      })
+      .expect(201);
+
+    console.log(retorno.body);
   });
+});
 
-  it('Deve ter um ID', () => {
-    expect(usuario.id).toBe('uuid-usuario');
-  });
+describe('Model de usuario', () => {
+  it('Deve criar uma instancia de usuario', async () => {
+    const dadosUsuario = {
+      nome: 'Alura',
+      email: 'alura@alura.com',
+      senha: 'alura123456',
+    };
 
-  it('Deve ter um nome', () => {
-    expect(usuario.nome).toBe('Usuario Teste');
-  });
+    const usuario = new UsuarioEntity(
+      dadosUsuario.email,
+      dadosUsuario.nome,
+      dadosUsuario.senha,
+    );
 
-  it('Deve ter um email válido', () => {
-    expect(usuario.email).toBe('teste@teste.com');
-  });
-
-  it('Deve ter uma senha', () => {
-    expect(usuario.senha).toBe('Abc@123');
-  });
-
-  it('Deve ter timestamps válidos', () => {
-    expect(new Date(usuario.createdAt).toISOString()).toBe(usuario.createdAt);
-    expect(new Date(usuario.updatedAt).toISOString()).toBe(usuario.updatedAt);
-  });
-
-  it('Deve permitir pedidos', () => {
-    expect(usuario.pedidos).toBeInstanceOf(Array);
+    expect(usuario).toEqual(expect.objectContaining(dadosUsuario));
   });
 });

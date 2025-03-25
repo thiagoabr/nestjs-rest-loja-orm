@@ -9,9 +9,16 @@ import {
   PrimaryGeneratedColumn,
   OneToMany,
 } from 'typeorm';
+import { v4 as uuid } from 'uuid';
 
 @Entity({ name: 'usuarios' })
 export class UsuarioEntity {
+  constructor(email?: string, nome?: string, senha?: string) {
+    this.email = email;
+    this.nome = nome;
+    this.senha = senha;
+    this.id = uuid();
+  }
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
