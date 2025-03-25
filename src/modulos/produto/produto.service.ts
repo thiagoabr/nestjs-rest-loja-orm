@@ -5,7 +5,7 @@ import { ProdutoEntity } from './produto.entity';
 import { Repository } from 'typeorm';
 import { AtualizaProdutoDTO } from './dto/AtualizaProduto.dto';
 import { CriaProdutoDTO } from './dto/CriaProduto.dto';
-import { FornecedorEntity } from 'src/modulos/fornecedor/fornecedor.entity';
+import { FornecedorEntity } from '../../modulos/fornecedor/fornecedor.entity';
 import { ProdutoRepository } from './produto.repository';
 
 @Injectable()

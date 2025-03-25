@@ -12,7 +12,7 @@ import { PostgresConfigService } from './config/postgres.config.service';
 import { PedidoModule } from './modulos/pedido/pedido.module';
 import { RoleModule } from './modulos/role/role.module';
 import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
-import { FiltroDeExcecaoGlobal } from 'src/recursos/filtros/filtro-de-excecao-global';
+import { FiltroDeExcecaoGlobal } from '../src/recursos/filtros/filtro-de-excecao-global';
 import { CacheModule } from '@nestjs/cache-manager';
 import { redisStore } from 'cache-manager-redis-yet';
 import { AutenticacaoModule } from './modulos/autenticacao/autenticacao.module';

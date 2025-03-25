@@ -7,7 +7,7 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { PedidoEntity } from './pedido.entity';
 import { In, Repository } from 'typeorm';
-import { UsuarioEntity } from 'src/modulos/usuario/usuario.entity';
+import { UsuarioEntity } from '../../modulos/usuario/usuario.entity';
 import { StatusPedido } from './enum/statuspedido.enum';
 import { ItemPedidoEntity } from './itempedido.entity';
 import { CriaPedidoDTO } from './dto/CriaPedido.dto';

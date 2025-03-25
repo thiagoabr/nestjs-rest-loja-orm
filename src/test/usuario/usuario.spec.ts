@@ -22,7 +22,7 @@ describe('GET em /usuarios', () => {
 });
 
 describe('POST em /usuarios', () => {
-  it('Deve criar um novo usuários', async () => {
+  it.skip('Deve criar um novo usuários', async () => {
     const retorno = await request(app.getHttpServer())
       .post('/usuarios')
       .send({

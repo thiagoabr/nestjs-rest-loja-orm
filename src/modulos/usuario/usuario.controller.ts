@@ -14,7 +14,7 @@ import { AtualizaUsuarioDTO } from './dto/AtualizaUsuario.dto';
 import { CriaUsuarioDTO } from './dto/CriaUsuario.dto';
 import { ListaUsuarioDTO } from './dto/ListaUsuario.dto';
 import { UsuarioService } from './usuario.service';
-import { HashearSenhaPipe } from 'src/recursos/pipes/hashear-senha.pipe';
+import { HashearSenhaPipe } from '../../recursos/pipes/hashear-senha.pipe';
 import { CacheInterceptor } from '@nestjs/cache-manager';
 
 @Controller('/usuarios')

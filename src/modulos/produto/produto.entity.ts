@@ -11,7 +11,7 @@ import {
 import { ProdutoImagemEntity } from './produto-imagem.entity';
 import { ProdutoCaracteristicaEntity } from './produto-caracteristica.entity';
 import { ItemPedidoEntity } from '../pedido/itempedido.entity';
-import { FornecedorEntity } from 'src/modulos/fornecedor/fornecedor.entity';
+import { FornecedorEntity } from '../../modulos/fornecedor/fornecedor.entity';
 
 @Entity({ name: 'produtos' })
 export class ProdutoEntity {
