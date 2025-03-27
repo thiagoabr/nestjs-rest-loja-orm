@@ -34,7 +34,11 @@ export class UsuarioController {
 
       return {
         messagem: 'usuário criado com sucesso',
-        usuario: new ListaUsuarioDTO(usuarioCriado.id, usuarioCriado.nome),
+        usuario: new ListaUsuarioDTO(
+          usuarioCriado.id,
+          usuarioCriado.nome,
+          usuarioCriado.email,
+        ),
       };
     } catch (error) {
       throw new BadRequestException('Erro ao criar usuário');
