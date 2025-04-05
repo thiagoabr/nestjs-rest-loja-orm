@@ -45,14 +45,14 @@ export class ProdutoEntity {
   @OneToMany(
     () => ProdutoImagemEntity,
     (produtoImagemEntity) => produtoImagemEntity.produto,
-    { cascade: true, eager: true },
+    { nullable: true, cascade: true, eager: true },
   )
   imagens: ProdutoImagemEntity[];
 
   @OneToMany(
     () => ProdutoCaracteristicaEntity,
     (produtoCaracteristicaEntity) => produtoCaracteristicaEntity.produto,
-    { cascade: true, eager: true },
+    { nullable: true, cascade: true, eager: true },
   )
   caracteristicas: ProdutoCaracteristicaEntity[];
 
@@ -63,6 +63,8 @@ export class ProdutoEntity {
   })
   fornecedor: FornecedorEntity;
 
-  @OneToMany(() => ItemPedidoEntity, (itemPedido) => itemPedido.produto)
+  @OneToMany(() => ItemPedidoEntity, (itemPedido) => itemPedido.produto, {
+    nullable: true,
+  })
   itensPedido: ItemPedidoEntity[];
 }

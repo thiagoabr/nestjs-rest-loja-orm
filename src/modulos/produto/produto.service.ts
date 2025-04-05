@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { ListaProdutoDTO } from './dto/ListaProduto.dto';
+import { ListarProdutosDTO } from './dto/ListaProduto.dto';
 import { ProdutoEntity } from './produto.entity';
 import { Repository } from 'typeorm';
 import { AtualizaProdutoDTO } from './dto/AtualizaProduto.dto';
@@ -45,11 +45,13 @@ export class ProdutoService {
     });
     const produtosLista = produtosSalvos.map(
       (produto) =>
-        new ListaProdutoDTO(
+        new ListarProdutosDTO(
           produto.id,
           produto.nome,
-          produto.caracteristicas,
-          produto.imagens,
+          produto.valor,
+          produto.quantidade,
+          produto.descricao,
+          produto.categoria,
         ),
     );
     return produtosLista;

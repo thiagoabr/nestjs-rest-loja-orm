@@ -8,6 +8,17 @@ class ListaImagemProdutoDTO {
   descricao: string;
 }
 
+export class ListarProdutosDTO {
+  constructor(
+    readonly id: string,
+    readonly nome: string,
+    readonly valor: number,
+    readonly quantidade: number,
+    readonly descricao: string,
+    readonly categoria: string,
+  ) {}
+}
+
 export class ListaProdutoDTO {
   constructor(
     readonly id: string,
